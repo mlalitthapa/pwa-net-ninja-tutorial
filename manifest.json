@@ -1,6 +1,6 @@
 {
-    "name": "FoodNinja",
-    "shor_name": "FoodNinja",
+    "name": "Food Ninja",
+    "short_name": "FoodNinja",
     "start_url": "/index.html",
     "display": "standalone",
     "background_color": "#FFE9D2",
