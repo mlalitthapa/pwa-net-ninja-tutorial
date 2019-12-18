@@ -1,4 +1,4 @@
-const STATIC_ASSETS_CACHE = 'static-assets-cache';
+const STATIC_ASSETS_CACHE = 'static-assets-cache-v1';
 const ASSETS = [
     '/',
     'index.html',
@@ -25,8 +25,16 @@ self.addEventListener('install', event => {
 });
 
 // Listen to activate event
-self.addEventListener('activate', (event) => {
-    // console.log('Service worker has been activated');
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        // Get the current cache keys and remove all other except the current version
+        caches.keys().then(keys => {
+            return Promise.all(
+                keys.filter(key => key !== STATIC_ASSETS_CACHE)
+                    .map(key => caches.delete(key))
+            );
+        })
+    );
 });
 
 // Fetch event
