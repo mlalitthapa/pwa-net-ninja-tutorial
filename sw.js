@@ -9,6 +9,7 @@ const ASSETS = [
     '/css/styles.css',
     '/img/dish.png',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
+    'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
 ];
 
 // install service worker
@@ -31,4 +32,9 @@ self.addEventListener('activate', (event) => {
 // Fetch event
 self.addEventListener('fetch', event => {
     // console.log('Fetch event', event);
+    event.respondWith(
+        caches.match(event.request).then(cacheResponse => {
+            return cacheResponse || fetch(event.request);
+        })
+    );
 });
