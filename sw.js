@@ -11,6 +11,7 @@ const ASSETS = [
     '/img/dish.png',
     'https://fonts.googleapis.com/icon?family=Material+Icons',
     'https://fonts.gstatic.com/s/materialicons/v48/flUhRq6tzZclQEJ-Vdg-IuiaDsNcIhQ8tQ.woff2',
+    '/pages/fallback.html',
 ];
 
 // install service worker
@@ -31,7 +32,7 @@ self.addEventListener('activate', event => {
         // Get the current cache keys and remove all other except the current version
         caches.keys().then(keys => {
             return Promise.all(
-                keys.filter(key => key !== STATIC_ASSETS_CACHE)
+                keys.filter(key => key !== STATIC_ASSETS_CACHE && key !== DYNAMIC_CACHE_KEY)
                     .map(key => caches.delete(key))
             );
         })
@@ -50,6 +51,6 @@ self.addEventListener('fetch', event => {
                     return fetchResponse;
                 });
             });
-        })
+        }).catch(() => caches.match('/pages/fallback.html'))
     );
 });
