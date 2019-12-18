@@ -1,4 +1,5 @@
 const STATIC_ASSETS_CACHE = 'static-assets-cache-v1';
+const DYNAMIC_CACHE_KEY = 'dynamic-cache-v1';
 const ASSETS = [
     '/',
     'index.html',
@@ -42,7 +43,13 @@ self.addEventListener('fetch', event => {
     // console.log('Fetch event', event);
     event.respondWith(
         caches.match(event.request).then(cacheResponse => {
-            return cacheResponse || fetch(event.request);
+            return cacheResponse || fetch(event.request).then(fetchResponse => {
+                // Cache the response data of fetch in new dynamic cache key
+                return caches.open(DYNAMIC_CACHE_KEY).then(cache => {
+                    cache.put(event.request.url, fetchResponse.clone());
+                    return fetchResponse;
+                });
+            });
         })
     );
 });
